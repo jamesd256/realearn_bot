@@ -8,10 +8,9 @@ function load_realearn_preset(preset_type, name)
 	else
 		preset_path = REALEARN_MAIN_PRESET_PATH
     end
-    reaper.ShowConsoleMsg(preset_path .. "\n")
-	local file_path = preset_path .. name .. ".json"
+    
+    local file_path = preset_path .. name .. ".json"
 	
-	reaper.ShowConsoleMsg(file_path .. "\n")
 	local file = io.open(file_path, "r")
 	
 	local preset_text = file:read("*a") 
