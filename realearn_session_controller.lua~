@@ -1,0 +1,37 @@
+-- set the global Reaper script root path
+script_path = debug.getinfo(1,"S").source:match[[^@?(.+[\/])]]
+
+-- Required modules
+dofile(script_path .. "reabot/utils.lua")
+JSON = dofile(script_path .. "JSON.lua")
+JSON.strictTypes = true
+
+-- To build a valid and complete Realearn session, we need to collate mapping 
+-- data from both controller and main presets, and set a few things like 
+--   - Midi device ids (control and feedback)
+--   - Which presets are selected
+--   - Some session wide options (let through stuff
+--   ----- Edit the fields below to setup the session you'd like --------
+
+local session_context = {
+	["main_preset_id"] 			= "reabot",
+	["controller_preset_id"] 	= "test-controller",
+	["control_device_id"]		= "12",
+    ["feedback_device_id"]		= "12"
+} 
+
+-- creates the session data ready for Realern
+local session_data = build_session_data(session_context)
+
+-- Alter/manipulate any fields in the data, or add/remove/switch mappings here:
+
+-- e.g.
+
+-- session_data["mappings"][1]["name"] = "new name"
+
+session_data["mappings"][1]["name"] = "new name"
+session_data["controllerMappings"][1]["name"] = "new c name"
+send_session_to_relearn_instance(session_data)
+
+
+
