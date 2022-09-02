@@ -97,6 +97,8 @@ local session_context = {
 -- creates the session data ready for Realern
 local session_data = build_session_data(session_context)
 
+
+
 --[[
 
 	2: 
@@ -113,10 +115,7 @@ local session_data = build_session_data(session_context)
 ]]--
 
 
-
-
-
-
+--
 
 -- 3:
 -- 
@@ -131,7 +130,7 @@ local instance_context = {
 	["instanceFXID"]			= 0  -- zero is the first one in the list
 }
 
-send_session_to_relearn_instance(session_data,instance_context)
+--send_session_to_relearn_instance(session_data,instance_context)
 
 
 

@@ -1,6 +1,16 @@
+--[[
+
+	Library functions for realarn_session_controller
+
+]]--
+
+-- Paths
 REALEARN_PRESET_PATH = "R:/Reaper/Data/helgoboss/realearn/presets/"
 REALEARN_MAIN_PRESET_PATH = REALEARN_PRESET_PATH .. "main/"
 REALEARN_CONTROLLER_PRESET_PATH = REALEARN_PRESET_PATH .. "controller/"
+
+
+MIDI_SOURCE_TYPES = {"CC value","Note velocity","Note number","Pitch wheel","Channel after touch","Program change","(N)RPN value","Polyphonic after touch","MIDI clock tempo (experimental)","MIDI clock transport","Raw MIDI / SysEx","MIDI script (feedback only)","Display (feedback only)"}
 
 function load_realearn_preset(preset_type, name)
 	if preset_type == 'controller' then
@@ -41,6 +51,7 @@ end
 function send_session_to_relearn_instance(session_data, instance_context)
 
 	local session_json = JSON:encode_pretty(session_data)	
+	reaper.ShowConsoleMsg(session_json)
 	local track = resolve_track(instance_context)
 	reaper.TrackFX_SetNamedConfigParm(track,instance_context["instanceFXID"],"set-state",session_json)
 	
@@ -79,4 +90,35 @@ function dump(o)
    else
       return tostring(o)
    end
+end
+
+function track_param_experiments()
+	local sel_track = reaper.GetSelectedTrack(0 , 0)
+	local num_params = reaper.TrackFX_GetNumParams(sel_track, 0)
+	reaper.ShowConsoleMsg(num_params .. "\n")
+	
+	--retval, name_config_param = reaper.TrackFX_GetNamedConfigParm(sel_track,0,)
+	
+	for i = 0,num_params,1 
+	do 
+	   --reaper.ShowConsoleMsg(i .. "\n")
+	   retval, param_name = reaper.TrackFX_GetParamName(sel_track,0, i)
+	   retval, ex_minval, ex_maxval = reaper.TrackFX_GetParamEx(sel_track,0,i)
+	   retval, minval, maxval = reaper.TrackFX_GetParam(sel_track,0,i)
+	   retval, param_ident = reaper.TrackFX_GetParamIdent(sel_track,0,i)
+	   param_norm = reaper.TrackFX_GetParamNormalized(sel_track,0,i)
+	   --retval, c_format_value = reaper.TrackFX_FormatParamValue(sel_track,0,i)
+	   retval, value_formatted = reaper.TrackFX_GetFormattedParamValue(sel_track,0,i)
+	   
+	   retval, step, smallstep, largestep, istoggle = reaper.TrackFX_GetParameterStepSizes(sel_track,0,i)
+	   
+	   
+	   reaper.ShowConsoleMsg("name: " .. param_name .. ",Normalised: " .. param_norm ..",Ident: " .. param_ident .. ", minval: " .. minval .. ", maxval: " .. maxval.. "\n")
+	   reaper.ShowConsoleMsg("name: " .. param_name .. ",Normalised: " .. param_norm ..",Ident: " .. param_ident .. ", ex_minval: " .. ex_minval .. ", ex_maxval: " .. ex_maxval.. "\n")
+	   reaper.ShowConsoleMsg("name: " .. param_name .. ",Formatted: " .. value_formatted ..",param_ident: " .. param_ident .. ", ex_minval: " .. ex_minval .. ", ex_maxval: " .. ex_maxval.. "\n")
+	   reaper.ShowConsoleMsg("\t step: " .. step .. ",smallstep: " .. smallstep.. ",largestep: " .. largestep.. ",istoggle: " .. tostring(istoggle) .. "\n")
+	   
+	end	 
+
+
 end
